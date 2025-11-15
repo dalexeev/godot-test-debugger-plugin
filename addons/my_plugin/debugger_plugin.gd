@@ -19,8 +19,9 @@ func _capture(message: String, data: Array, session_id: int) -> bool:
 			_print(session_id, "_capture(): Hit breakpoint.")
 			_print_stack(session_id, stack)
 
-			# This will work at this point too, but will print an error.
-			#get_session(session_id).send_message("continue", [])
+			# This is an undocumented feature. You can't capture built-in messages, but you can
+			# send them yourself. See `RemoteDebugger::debug()` in Godot source code.
+			get_session(session_id).send_message.call_deferred("continue", [])
 		else:
 			_print(session_id, "Invalid parameter `from`: %s." % from)
 		return true
@@ -34,13 +35,7 @@ func _setup_session(session_id: int) -> void:
 
 func _on_session_breaked(session_id: int) -> void:
 	_print(session_id, "_on_session_breaked(): Begin")
-
 	get_session(session_id).send_message("my_plugin:get_stack", ["session_breaked"])
-
-	# This is an undocumented feature. You can't capture built-in messages, but you can
-	# send them yourself. See `RemoteDebugger::debug()` in Godot source code.
-	get_session(session_id).send_message("continue", [])
-
 	_print(session_id, "_on_session_breaked(): End")
 
 

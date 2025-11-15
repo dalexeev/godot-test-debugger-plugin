@@ -11,7 +11,9 @@ func test() -> void:
 		return
 
 	print("_test(): Begin")
-	EngineDebugger.send_message("my_plugin:test", get_stack())
+	var stack: Array = get_stack()
+	stack.remove_at(0) # Remove current frame (`test()` call) from the stack.
+	EngineDebugger.send_message("my_plugin:test", stack)
 	print("_test(): End")
 
 
